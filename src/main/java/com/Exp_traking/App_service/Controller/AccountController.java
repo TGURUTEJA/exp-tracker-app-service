@@ -34,5 +34,4 @@ public class AccountController {
         return accountService.getAccountDetailsByUserId(userId);
     }
 
-
 }

@@ -2,6 +2,8 @@ package com.Exp_traking.App_service.Apicalls;
 
 
 import com.Exp_traking.App_service.Pojo.ApiResponse;
+import com.Exp_traking.App_service.Pojo.GraphQL.GraphQLException;
+import com.Exp_traking.App_service.Pojo.GraphQL.GraphQLRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Supplier;
 
 @Component
 public class CustomAPIHandler {
@@ -137,6 +141,49 @@ public class CustomAPIHandler {
                         return  util.buildApiErrorResponse("Error parsing response data: " + e.getMessage(), null);
                     }
                 });
+    }
+
+    public <T> Mono<T> GraphQlApiCall(String query, Object variables, TypeReference<T> responseType,String path) {
+        GraphQLRequest request = new GraphQLRequest(query, variables);
+
+        return webClientGraphQL.post()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .flatMap(json -> {
+                    System.out.println("GraphQL Response: " + json.toString());
+                    if (json.has("errors") && !json.get("errors").isEmpty()) {
+                        JsonNode error = json.get("errors").get(0);
+                        String message = error.path("message").asText("GraphQL error");
+                        String code = error.path("extensions").path("code").asText("UNKNOWN");
+                        return Mono.error(new GraphQLException(code, message));
+                    }
+
+                    JsonNode dataNode = json.path("data");
+
+                    if (dataNode.isMissingNode() || dataNode.isNull()) {
+                        return Mono.error(new RuntimeException("Missing data in GraphQL response"));
+                    }
+
+                    if (path != null && !path.isBlank()) {
+                        for (String p : path.split("\\.")) {
+                            dataNode = dataNode.path(p);
+                        }
+                    }
+
+                    if (dataNode.isMissingNode() || dataNode.isNull()) {
+                        return Mono.error(new RuntimeException("Invalid response path"));
+                    }
+
+                    try {
+                        T result = mapper.treeToValue(dataNode, responseType);
+                        return Mono.just(result);
+                    } catch (Exception e) {
+                        return Mono.error(new RuntimeException("Parsing error: " + e.getMessage()));
+                    }
+                });
+
     }
 
 }

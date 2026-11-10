@@ -79,4 +79,58 @@ public class GraphqlQuries {
                   }
                 }
         """;
+    public static final String Create_Category =  """
+                mutation($input: CategoryInput!) {
+                    createCategory(input: $input) {
+                        id
+                        name
+                        type
+                        icon
+                        color
+                    }
+                }
+        """;
+
+     public static final String Create_Multiple_Categories = """
+            mutation CreateMultipleCategories($input: [CategoryInput!]!) {
+              createMultipleCategories(input: $input) {
+                message
+                error
+                data {
+                  id
+                  userId
+                  name
+                  type
+                  icon
+                  color
+                }
+              }
+            }
+        """;
+
+    public static final String Get_Categories_By_UserID = """
+            query GetCategoriesByUserId($userId: String!) {
+              getCategoriesByUserId(userId: $userId) {
+                id
+                name
+                type
+              }
+            }
+        """;
+
+    public static final String Update_Category = """
+            mutation UpdateCategory($id: ID!, $input: CategoryInput!) {
+              updateCategory(id: $id, input: $input) {
+                id
+                name
+                type
+              }
+            }
+        """;
+
+    public static final String Delete_Category = """
+            mutation DeleteCategory($id: ID!) {
+              deleteCategory(id: $id)
+            }
+        """;
 }

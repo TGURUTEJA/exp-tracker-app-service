@@ -66,8 +66,9 @@ public class JwtAuthWebFilter implements WebFilter {
         }
 
         if (token == null || token.isBlank()) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+//            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+//            return exchange.getResponse().setComplete();
+            return chain.filter(exchange);
         }
 
         try {
