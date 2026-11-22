@@ -11,14 +11,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.function.Supplier;
 
 @Component
 public class CustomAPIHandler {
@@ -28,14 +29,17 @@ public class CustomAPIHandler {
     private final Util util;
 
     private final ObjectMapper mapper;
+    
 
-
-    public CustomAPIHandler(WebClient.Builder builder, Util util,ObjectMapper mapper) {
+    public CustomAPIHandler(WebClient.Builder builder, Util util,ObjectMapper mapper,
+        @Value ("${app.db-full-url}") @NonNull String dbServiceUrl,
+        @Value("${app.auth-full-url}") @NonNull String authGraphQlUrl
+    ) {
         this.webClient = builder
-                .baseUrl("http://localhost:8082")
+                .baseUrl(authGraphQlUrl)
                 .build();
         this.webClientGraphQL = builder
-                .baseUrl("http://localhost:8081/graphql")
+                .baseUrl(dbServiceUrl)
                 .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .build();
         this.util = util;

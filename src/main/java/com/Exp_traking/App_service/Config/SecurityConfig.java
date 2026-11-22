@@ -1,24 +1,30 @@
 package com.Exp_traking.App_service.Config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.server.session.DefaultWebSessionManager;
-import org.springframework.web.server.session.HeaderWebSessionIdResolver;
-import org.springframework.web.server.session.InMemoryWebSessionStore;
-import org.springframework.web.server.session.WebSessionManager;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
+  private final List<String> allowedOrigins;
+
+  public SecurityConfig(
+      @Value ("${app.cors.allowed-origins}") String allowedOriginsCsv) {
+    this.allowedOrigins = Arrays.stream(allowedOriginsCsv.split(","))
+        .map(String::trim)
+        .filter(s -> !s.isEmpty())
+        .toList();
+  }
 
   @Bean
   SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
@@ -37,8 +43,9 @@ public class SecurityConfig {
 
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
+    System.out.println("Allowed Origins: " + allowedOrigins);
     CorsConfiguration cfg = new CorsConfiguration();
-    cfg.setAllowedOrigins(List.of("http://localhost:3030")); // your UI
+    cfg.setAllowedOrigins(allowedOrigins); // your UI
     cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     cfg.setAllowedHeaders(List.of("*"));
     cfg.setAllowCredentials(true);
