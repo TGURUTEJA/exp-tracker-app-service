@@ -257,4 +257,116 @@ public class GraphqlQuries {
               deleteCategory(id: $id, userId: $userId)
             }
         """;
+
+    public static final String Get_Budgets_By_UserID = """
+            query GetBudgetsByUserId($userId: String!) {
+              getBudgetsByUserId(userId: $userId) {
+                id
+                userId
+                categoryId
+                year
+                month
+                amount
+                isActive
+                recurrence
+              }
+            }
+        """;
+
+    public static final String Get_Budgets_By_UserID_And_Period = """
+            query GetBudgetsByUserIdAndDateRange(
+              $userId: String!,
+              $startYear: Int!,
+              $startMonth: Int!,
+              $endYear: Int!,
+              $endMonth: Int!
+            ) {
+              getBudgetsByUserIdAndDateRange(
+                userId: $userId,
+                startYear: $startYear,
+                startMonth: $startMonth,
+                endYear: $endYear,
+                endMonth: $endMonth
+              ) {
+                id
+                userId
+                categoryId
+                year
+                month
+                amount
+                isActive
+                recurrence
+              }
+            }
+        """;
+
+    public static final String Create_Budget = """
+            mutation CreateBudget(
+              $userId: String!,
+              $categoryId: Int!,
+              $year: Int!,
+              $month: Int!,
+              $amount: BigDecimal!,
+              $isActive: Boolean,
+              $recurrence: String
+            ) {
+              createBudget(
+                userId: $userId,
+                categoryId: $categoryId,
+                year: $year,
+                month: $month,
+                amount: $amount,
+                isActive: $isActive,
+                recurrence: $recurrence
+              ) {
+                id
+                userId
+                categoryId
+                year
+                month
+                amount
+                isActive
+                recurrence
+              }
+            }
+        """;
+
+    public static final String Update_Budget = """
+            mutation UpdateBudget(
+              $id: ID!,
+              $userId: String!,
+              $categoryId: Int,
+              $year: Int,
+              $month: Int,
+              $amount: BigDecimal,
+              $isActive: Boolean,
+              $recurrence: String
+            ) {
+              updateBudget(
+                id: $id,
+                userId: $userId,
+                categoryId: $categoryId,
+                year: $year,
+                month: $month,
+                amount: $amount,
+                isActive: $isActive,
+                recurrence: $recurrence
+              ) {
+                id
+                userId
+                categoryId
+                year
+                month
+                amount
+                isActive
+                recurrence
+              }
+            }
+        """;
+
+    public static final String Delete_Budget = """
+            mutation DeleteBudget($id: ID!, $userId: String!) {
+              deleteBudget(id: $id, userId: $userId)
+            }
+        """;
 }
