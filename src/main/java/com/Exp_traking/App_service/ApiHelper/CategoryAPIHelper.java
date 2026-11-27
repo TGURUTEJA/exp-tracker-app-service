@@ -43,13 +43,16 @@ public class CategoryAPIHelper {
         input.put("userId", request.getUserId());
         input.put("name", request.getName());
         input.put("type", request.getType());
+        input.put("icon", request.getIcon());
+        input.put("color", request.getColor());
         variables.put("input", input);
         return customAPIHandler.GraphQlApiCall(GraphqlQuries.Update_Category, variables, new TypeReference<CategoryResponse>() {}, "updateCategory");
     }
 
-    public Mono<Boolean> deleteCategory(String categoryId) {
+    public Mono<Boolean> deleteCategory(String categoryId, String userId) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("id", categoryId);
+        variables.put("userId", userId);
         return customAPIHandler.GraphQlApiCall(GraphqlQuries.Delete_Category, variables, new TypeReference<Boolean>() {}, "deleteCategory");
     }
 

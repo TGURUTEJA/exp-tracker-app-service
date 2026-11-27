@@ -8,5 +8,7 @@ public class CategoryUpdateRequest {
     private String userId;
     private String name;
     private String type;
+    private String icon;
+    private String color;
 }
 

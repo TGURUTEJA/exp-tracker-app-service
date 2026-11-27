@@ -14,8 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class EMIAccountPojo extends AccountDetails{
-    private Long accountId;
+public class EMIAccountPojo {
     private BigDecimal principalAmount;
     private BigDecimal interestRate;
     private Integer totalInstallments;

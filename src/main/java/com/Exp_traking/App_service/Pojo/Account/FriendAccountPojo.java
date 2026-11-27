@@ -14,8 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FriendAccountPojo extends AccountDetails {
-    private Long accountId;
+public class FriendAccountPojo {
     private String friendName;
     private String contactInfo;
     private BigDecimal outstandingAmount;

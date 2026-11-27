@@ -3,7 +3,6 @@ package com.Exp_traking.App_service.ApiHelper;
 import com.Exp_traking.App_service.Apicalls.CustomAPIHandler;
 import com.Exp_traking.App_service.Constants.GraphqlQuries;
 import com.Exp_traking.App_service.Pojo.Account.AccountDetails;
-import com.Exp_traking.App_service.Pojo.Account.AccountDetailsList;
 import com.Exp_traking.App_service.Pojo.ApiResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +22,14 @@ public class AccountAPIHelper {
         HashMap<String , String> params = new HashMap<>();
         params.put("id", userID);
         return customAPIHandler.GraphQlCustomApiCall(GraphqlQuries.Get_Accouts_By_UserID, params , new TypeReference<List<AccountDetails>>() {} ,"getAccountsByUserId" );
+    }
+
+    public Mono<ApiResponse<AccountDetails>> CreateAccount(AccountDetails accountDetails) {
+        return customAPIHandler.GraphQlCustomApiCall(
+                GraphqlQuries.Create_Account,
+                accountDetails,
+                new TypeReference<AccountDetails>() {},
+                "createAccount"
+        );
     }
 }

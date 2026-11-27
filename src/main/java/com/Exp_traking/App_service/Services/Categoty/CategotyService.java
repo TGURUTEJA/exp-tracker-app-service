@@ -84,9 +84,12 @@ public class CategotyService {
                 });
     }
 
-    public Mono<ApiResponse<CategoryDeleteResponse>> DeleteCategoryService(String categoryId) {
+    public Mono<ApiResponse<CategoryDeleteResponse>> DeleteCategoryService(
+            String categoryId,
+            String userId
+    ) {
         ApiResponse<CategoryDeleteResponse> response = new ApiResponse<>();
-        return categoryAPIHelper.deleteCategory(categoryId)
+        return categoryAPIHelper.deleteCategory(categoryId, userId)
                 .map(isDeleted -> {
                     CategoryDeleteResponse deleteResponse = new CategoryDeleteResponse();
                     deleteResponse.setSuccess(isDeleted);

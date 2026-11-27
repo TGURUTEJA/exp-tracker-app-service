@@ -49,7 +49,20 @@ public class CustomAPIHandler {
     }
 
     private JsonNode toJson(Object value) {
-        return new ObjectMapper().valueToTree(value);
+        return mapper.valueToTree(value);
+    }
+
+    ObjectNode buildGraphQlRequestBody(String query, Object variables) {
+        ObjectNode requestBody = JsonNodeFactory.instance.objectNode();
+        requestBody.put("query", query);
+        if (variables != null) {
+            ObjectNode inputVariables = JsonNodeFactory.instance.objectNode();
+            inputVariables.set("input", toJson(variables));
+            requestBody.set("variables", inputVariables);
+        } else {
+            requestBody.set("variables", JsonNodeFactory.instance.objectNode());
+        }
+        return requestBody;
     }
 
     public <T,P> Mono<T> customApicall(String apiPath, Class<T> responseType, String method, P Request) {
@@ -100,13 +113,7 @@ public class CustomAPIHandler {
 
 
     public <V,R> Mono<ApiResponse<R>> GraphQlCustomApiCall(String query, V variables, TypeReference<R> ResultClass, String ResultPath) {
-        ObjectNode requestBody = JsonNodeFactory.instance.objectNode();
-        requestBody.put("query", query);
-        if(variables != null){
-            requestBody.set("variables", JsonNodeFactory.instance.objectNode().set("input", toJson(variables)));
-        } else {
-            requestBody.set("variables", JsonNodeFactory.instance.objectNode());
-        }
+        ObjectNode requestBody = buildGraphQlRequestBody(query, variables);
         return webClientGraphQL.post()
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

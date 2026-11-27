@@ -12,8 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class InvestmentAccountPojo extends AccountDetails {
-    private Long accountId;
+public class InvestmentAccountPojo {
     private String investmentType;
     private LocalDate purchaseDate;
     private LocalDate maturityDate;

@@ -8,6 +8,8 @@ import com.Exp_traking.App_service.Pojo.ApiResponse;
 import com.Exp_traking.App_service.Services.AccountService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,18 @@ public class AccountController {
     public Mono<ApiResponse<AccountResponse>> accountDetailsByUserId(ServerWebExchange exchange) {
         String userId = exchange.getAttribute("ID");
         return accountService.getAccountDetailsByUserId(userId);
+    }
+
+    @PostMapping("/create_account")
+    public Mono<ApiResponse<AccountDetails>> createAccount(
+            ServerWebExchange exchange,
+            @RequestBody AccountDetails request
+    ) {
+        request.setUserId(exchange.getAttribute("ID"));
+        if (request.getStatus() == null || request.getStatus().isBlank()) {
+            request.setStatus("active");
+        }
+        return accountService.createAccount(request);
     }
 
 }

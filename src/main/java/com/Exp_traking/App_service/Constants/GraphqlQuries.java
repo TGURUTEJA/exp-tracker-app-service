@@ -59,10 +59,14 @@ public class GraphqlQuries {
                           emiAmount
                           totalInstallments
                           paidInstallments
+                          startDate
+                          endDate
                           nextDueDate
                         }
                         investment {
                           investmentType
+                          purchaseDate
+                          maturityDate
                           amountInvested
                           currentValue
                           expectedReturn
@@ -79,6 +83,122 @@ public class GraphqlQuries {
                   }
                 }
         """;
+
+    public static final String Get_Transactions_By_UserID = """
+            query GetTransactionsByUserId($userId: String!) {
+              getTransactionsByUserId(userId: $userId) {
+                id
+                userId
+                accountId
+                amount
+                debitCredit
+                categoryId
+                description
+                created
+                accountBalance
+              }
+            }
+        """;
+
+    public static final String Get_Filtered_Transactions_By_UserID = """
+            query GetTransactionsByUserId(
+              $userId: String!,
+              $startDate: String,
+              $endDate: String,
+              $accountId: Float,
+              $categoryId: Int,
+              $newestFirst: Boolean
+            ) {
+              getTransactionsByUserId(
+                userId: $userId,
+                startDate: $startDate,
+                endDate: $endDate,
+                accountId: $accountId,
+                categoryId: $categoryId,
+                newestFirst: $newestFirst
+              ) {
+                id
+                userId
+                accountId
+                amount
+                debitCredit
+                categoryId
+                description
+                created
+                accountBalance
+              }
+            }
+        """;
+
+    public static final String Create_Transaction = """
+            mutation CreateTransaction($userId: String!, $input: TransactionPojo!) {
+              createTransaction(userId: $userId, input: $input) {
+                message
+                error
+                data {
+                  id
+                  userId
+                  accountId
+                  amount
+                  debitCredit
+                  categoryId
+                  description
+                  created
+                  accountBalance
+                }
+              }
+            }
+        """;
+
+    public static final String Update_Transaction = """
+            mutation UpdateTransaction($id: Int!, $userId: String!, $input: TransactionPojo!) {
+              updateTransaction(id: $id, userId: $userId, input: $input) {
+                message
+                error
+                data {
+                  id
+                  userId
+                  accountId
+                  amount
+                  debitCredit
+                  categoryId
+                  description
+                  created
+                  accountBalance
+                }
+              }
+            }
+        """;
+
+    public static final String Delete_Transaction = """
+            mutation DeleteTransaction($id: Int!, $userId: String!) {
+              deleteTransaction(id: $id, userId: $userId) {
+                message
+                error
+                data
+              }
+            }
+        """;
+
+    public static final String Create_Account = """
+            mutation CreateAccount($input: AccountInput!) {
+              createAccount(body: $input) {
+                error
+                message
+                data {
+                  id
+                  userId
+                  type
+                  displayName
+                  balance
+                  currency
+                  status
+                  createdAt
+                }
+              }
+            }
+        """;
+
     public static final String Create_Category =  """
                 mutation($input: CategoryInput!) {
                     createCategory(input: $input) {
@@ -114,6 +234,8 @@ public class GraphqlQuries {
                 id
                 name
                 type
+                icon
+                color
               }
             }
         """;
@@ -124,13 +246,15 @@ public class GraphqlQuries {
                 id
                 name
                 type
+                icon
+                color
               }
             }
         """;
 
     public static final String Delete_Category = """
-            mutation DeleteCategory($id: ID!) {
-              deleteCategory(id: $id)
+            mutation DeleteCategory($id: ID!, $userId: String!) {
+              deleteCategory(id: $id, userId: $userId)
             }
         """;
 }

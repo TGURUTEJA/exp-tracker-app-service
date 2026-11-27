@@ -21,6 +21,13 @@ public class AccountService {
     private final AccountAPIHelper accountAPIHelper;
     private final Util util;
 
+    public Mono<ApiResponse<AccountDetails>> createAccount(AccountDetails accountDetails) {
+        return accountAPIHelper.CreateAccount(accountDetails)
+                .flatMap(response -> response.isError()
+                        ? util.buildApiErrorResponse(response.getMessage(), null)
+                        : util.buildApiSuccessResponse(response.getMessage(), response.getData()));
+    }
+
     public Mono<ApiResponse<AccountResponse>> getAccountDetailsByUserId(String UserId) {
         AccountResponse accountResponse = new AccountResponse();
         return accountAPIHelper.GetAccountDetailsByUserID(UserId).flatMap(apiResponse -> {
