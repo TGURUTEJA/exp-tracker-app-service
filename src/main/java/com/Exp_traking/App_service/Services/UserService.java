@@ -5,6 +5,7 @@ import com.Exp_traking.App_service.ApiHelper.AuthAPIHelper;
 import com.Exp_traking.App_service.ApiHelper.UserAPIHelper;
 import com.Exp_traking.App_service.Pojo.ApiResponse;
 import com.Exp_traking.App_service.Pojo.RegisterUserDBResponse;
+import com.Exp_traking.App_service.Pojo.UserProfileUpdateRequest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,13 @@ public class UserService {
 
     public Mono<ApiResponse<RegisterUserDBResponse>> getUserDetailsByID(String userID) {
         return userAPIHelper.getUserDetails(userID);
+    }
+
+    public Mono<ApiResponse<RegisterUserDBResponse>> updateUserDetails(
+            String userID,
+            UserProfileUpdateRequest request
+    ) {
+        return userAPIHelper.updateUserDetails(userID, request);
     }
 
 }

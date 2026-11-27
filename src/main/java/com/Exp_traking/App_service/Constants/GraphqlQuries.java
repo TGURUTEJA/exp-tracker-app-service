@@ -32,6 +32,21 @@ public class GraphqlQuries {
             }
         """;
 
+    public static final String Update_User = """
+            mutation UpdateUser($id: String!, $input: UserInput!) {
+              updateUser(id: $id, input: $input) {
+                message
+                error
+                data {
+                  id
+                  firstName
+                  lastName
+                  dob
+                }
+              }
+            }
+        """;
+
     public static final String Get_Accouts_By_UserID = """
             query GetAccountsByUserId($input: IDInput!) {
                   getAccountsByUserId(input: $input) {
